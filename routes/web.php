@@ -26,6 +26,7 @@ Route::post('/graficoanual','GraficoController@getLicitacoes');
 Route::get('/graficoanualapi','GraficoController@getJson');
 
 Route::get('/licitacao/editar/{id}','LicitacaoController@edit');
+Route::post('/licitacao/update/{id}','LicitacaoController@update');
 Route::get('/cadastro/categoria','LicitacaoController@cadCategoria');
 Route::post('/cadastro/categoria/store','LicitacaoController@storeCategoria');
 Route::post('/licitacao/delete/{id}','LicitacaoController@delete');

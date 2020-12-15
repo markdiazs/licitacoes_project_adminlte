@@ -8,10 +8,13 @@ use Illuminate\Http\Request;
 use App\Modalidade;
 use DateTime;
 use Facade\FlareClient\Http\Response;
+use Facade\FlareClient\Stacktrace\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File as FacadesFile;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\File as FlysystemFile;
 
 class LicitacaoController extends Controller
 {
@@ -105,6 +108,7 @@ class LicitacaoController extends Controller
 
         return view('index',['modalidades' => $modalidades,'result' => $licitacao,'anexo' => $anexos,'dataForm' => $data]);
     }
+
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -117,7 +121,7 @@ class LicitacaoController extends Controller
             'cidade_licitacao'      => 'required',
             'abertura_licitacao'    => 'required',
             'contato_licitacao'     => 'required',
-            'valor_licitacao'           => 'required',
+            'valor_licitacao'       => 'required',
             'impugnacao_licitacao'  => 'required',
             'vencedor_licitacao'    => 'required',
             'objeto_licitacao'      => 'required',
@@ -189,8 +193,64 @@ class LicitacaoController extends Controller
         $user = Auth::user();
         $l = Licitacao::find($id);
         $modalidades = Modalidade::all();
-
         return view('editarlicitacao2', ['licitacao' => $l, 'modalidades' => $modalidades, 'user' => $user]);
+    }
+
+
+    public function update(Request $req, $id)
+    {
+
+        $this->validate($req, [
+            'titulo_licitacao'      => 'required',
+            'numero_licitacao'      => 'required',
+            'itens_licitacao'       => 'required',
+            'modalidade'            => 'required',
+            'local_licitacao'       => 'required',
+            'cidade_licitacao'      => 'required',
+            'contato_licitacao'     => 'required',
+            'valor_licitacao'       => 'required',
+            'impugnacao_licitacao'  => 'required',
+            'vencedor_licitacao'    => 'required',
+            'objeto_licitacao'      => 'required',
+            'situacao'              => 'required'
+
+        ]);
+
+        $l = Licitacao::find($id);
+
+        if(isset($l)){
+
+        // formatando a data
+        $data_abertura = new DateTime($req->input('abertura_licitacao'));
+        $data_abertura->format('d-m-y');
+
+        $licitacao = [
+            'titulo'        => $req->input('titulo_licitacao'),
+            'numero'        => $req->input('numero_licitacao'),
+            'qtd_itens'     => $req->input('itens_licitacao'),
+            'modalidade_id' => $req->input('modalidade'),
+            'modalidade'    => $req->input('modalidade'),
+            'local'         => $req->input('local_licitacao'),
+            'cidade'        => $req->input('cidade_licitacao'),
+            'data_abertura' => $data_abertura != null? $l->data_abertura : $req->input('data_abertura'),
+            'contato'       => $req->input('contato_licitacao'),
+            'valor_estimado'=> $req->input('valor_licitacao'),
+            'impugnacoes'   => $req->input('impugnacao_licitacao'),
+            'nome_vendedor' => $req->input('vencedor_licitacao'),
+            'objeto'        => $req->input('objeto_licitacao'),
+            'situacao'      => $req->input('situacao')
+        ];
+
+        $l->update($licitacao);
+
+        //  $licitacao_id = DB::table('licitacoes')->insertGetId($licitacao);
+        // anexos
+        flash('Licitação editada com sucesso')->warning();
+        return redirect('/');
+
+        }
+
+
     }
 
     public function delete($id)

@@ -18,7 +18,7 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form role="form" name="cadLicitacao" method="POST" action="/novalicitacao/store" enctype="multipart/form-data">
+              <form role="form" name="cadLicitacao" method="POST" action="/licitacao/update/{{$licitacao->id}}" enctype="multipart/form-data">
               @csrf
                 <div class="card-body">
                   <div class="form-group">
@@ -78,7 +78,7 @@
                     <div class="row">
                       <div class="col-md-4">
                         <label for="Local">Valor estimado da licitação</label>
-                        <input type="text" name="valor_licitacao" class="form-control" placeholder="valor estimado da licitação" value="{{$licitacao->valor_licitacao}}">
+                        <input type="text" name="valor_licitacao" class="form-control" placeholder="valor estimado da licitação" value="{{$licitacao->valor_estimado}}">
                       </div>
                       <div class="col-md-4">
                         <label for="Local">Questionamentos e impugnações</label>
@@ -102,7 +102,7 @@
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <a href="#" class="btn btn-primary" type="submit">Cadastrar</a>
+                  <button type="submit" class="btn btn-primary">cadastrar</button>
                   <a href="/" class="btn btn-warning">Voltar</a>
                 </div>
               </form>

@@ -10,6 +10,7 @@ class Licitacao extends Model
 {
     // nome da tabela
      protected $table = 'licitacoes';
+     protected $fillable = ['titulo','qtd_itens','modalidade_id', 'modalidade', 'local', 'cidade', 'data_abertura', 'contato', 'valor_estimado', 'impugnacoes', 'nome_vendedor', 'objeto situacao'];
 
     public function anexos()
     {
